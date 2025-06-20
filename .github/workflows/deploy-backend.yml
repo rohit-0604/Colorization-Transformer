@@ -1,0 +1,22 @@
+# .github/workflows/deploy-backend.yml
+name: Deploy Backend to Render
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the main branch
+    paths:
+      - 'backend/**' # Only run if changes are detected within the backend folder
+
+jobs:
+  trigger-render-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Trigger Render Deployment
+        run: curl -X POST ${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}
+        env:
+          RENDER_BACKEND_DEPLOY_HOOK: ${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}
