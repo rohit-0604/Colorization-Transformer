@@ -12,6 +12,12 @@ const App = () => {
     const [error, setError] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
 
+    // --- ADD THIS LINE HERE ---
+    // This will be your Render backend service URL.
+    // REPLACE 'https://YOUR_RENDER_SERVICE_NAME.onrender.com' with the actual URL you get from Render.
+    const backendBaseUrl = 'https://colorization-transformer.onrender.com';
+    // -------------------------
+
     const handleFileChange = (file) => {
         if (file) {
             if (!file.type.startsWith('image/')) {
@@ -51,7 +57,9 @@ const App = () => {
 
         try {
             // Make a POST request to the backend colorization endpoint
-            const response = await fetch('http://localhost:5000/colorize', {
+            // --- CHANGE THIS LINE ---
+            const response = await fetch(`${backendBaseUrl}/colorize`, { // Use the variable here
+            // ------------------------
                 method: 'POST',
                 body: formData,
             });
