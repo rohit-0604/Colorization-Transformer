@@ -1,0 +1,31 @@
+# Python virtual environments
+venv/
+.venv/
+backend/venv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Node.js modules for frontend
+frontend/node_modules/
+# frontend/.vite/ # Vite cache, usually ignored too
+
+# OS specific files
+.DS_Store # macOS
+Thumbs.db # Windows
+
+# Environment variables
+.env
+*.env
+
+# Logs
+*.log
+logs/
+
+# IDE specific files
+.vscode/
+.idea/
+
+# Deployment specific build artifacts (if not explicitly pushed)
+frontend/dist/ # The built frontend will be pushed to gh-pages branch, not main
