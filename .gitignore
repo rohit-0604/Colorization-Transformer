@@ -1,0 +1,19 @@
+# Environment variables
+.env
+backend/.env # In case you accidentally created one here
+frontend/.env
+
+# Python virtual environments
+venv/
+backend/venv/
+backend/venv_clean_deploy/ # Specific to your current setup
+
+# Node.js dependencies
+frontend/node_modules/
+
+# Frontend build output
+frontend/dist/
+
+# Python compiled files
+__pycache__/
+*.pyc
