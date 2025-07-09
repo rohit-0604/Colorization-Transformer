@@ -1,13 +1,12 @@
 # Colorization Transformer - Colorize Greyscale Images
 
-This project implements a hybrid CNN-Transformer model for the task of colorizing greyscale images. The goal is to take a black and white image and predict its original colors, bringing it to life.
+This project implements a hybrid CNN-Transformer model for the task of colorizing greyscale images. The goal is to take a black and white image and predict suitable visually attractive colors, bringing it to life. **Due to existing resource constraints, a less computationally intensive version of the model was implemented, offering a large scope for future improvements, including more advanced preprocessing techniques and further enhancements to the model's architecture and capabilities.**
 
 ## Live Demo (Frontend)
 
 Experience the Colorization Transformer in action! You can access the frontend application here:
 
 **[Frontend Live Demo Link Here](https://colorizegreyscaleimages.netlify.app/)**
-
 
 ## Backend Status & Important Disclaimer
 
