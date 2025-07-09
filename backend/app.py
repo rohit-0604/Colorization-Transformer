@@ -12,7 +12,8 @@ import numpy as np
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-
+# --- Your model architecture classes (ResidualBlock, CNNEncoder, etc.) go here ---
+# (No changes needed to these classes based on the current problem)
 class ResidualBlock(nn.Module):
     def __init__(self, channels):
         super().__init__()
@@ -41,15 +42,16 @@ class CNNEncoder(nn.Module):
 class TransformerBlock(nn.Module):
     def __init__(self, channels, heads=4, layers=2):
         super().__init__()
+        # Ensure batch_first is True for PyTorch 1.9+ Transformer
         self.transformer = nn.TransformerEncoder(
             nn.TransformerEncoderLayer(d_model=channels, nhead=heads, dim_feedforward=channels*4, batch_first=True),
             num_layers=layers
         )
     def forward(self, x):
         b, c, h, w = x.shape
-        x = x.view(b, c, -1).permute(0, 2, 1) 
-        x = self.transformer(x) 
-        x = x.permute(0, 2, 1).view(b, c, h, w)
+        x = x.view(b, c, -1).permute(0, 2, 1) # Flatten spatial dimensions and permute for Transformer
+        x = self.transformer(x) # Apply Transformer
+        x = x.permute(0, 2, 1).view(b, c, h, w) # Permute back and reshape
         return x
 
 class CNNDecoder(nn.Module):
@@ -90,30 +92,35 @@ class ColorizationModel(nn.Module):
 
 
 app = Flask(__name__)
+# Enable CORS for all origins. In a production environment, you might want to restrict this
+# to your Netlify frontend's domain (e.g., CORS(app, origins=["https://colorizegreyscaleimages.netlify.app"]))
 CORS(app)
 
-IMAGE_SIZE = 128 
-APPLY_SHARPNESS_ENHANCEMENT = True 
-SHARPNESS_FACTOR = 1.5 
-MODEL_PATH = 'best_colorization_model.pth' 
+IMAGE_SIZE = 128
+APPLY_SHARPNESS_ENHANCEMENT = True
+SHARPNESS_FACTOR = 1.5
+MODEL_PATH = 'best_colorization_model.pth'
 
-model = ColorizationModel()
+model = None # Initialize model to None
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 print(f"Attempting to load model from: {MODEL_PATH}")
 
 try:
+    model = ColorizationModel() # Instantiate the model
     model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
     model.to(device)
-    model.eval()
+    model.eval() # Set model to evaluation mode
     print(f"Model loaded successfully from {MODEL_PATH} on {device}!")
 except FileNotFoundError:
     print(f"Error: Model file not found at {MODEL_PATH}. Please ensure the model is in the same directory as this script.")
-    exit()
+    # Consider exiting here or setting a flag that the model is not available
+    # For deployment, it's better to explicitly handle this failure
+    model = None # Indicate model loading failed
+    # Instead of exit(), you might want to return an error status on /colorize
 except Exception as e:
     print(f"Error loading model: {e}")
-    exit()
-
+    model = None # Indicate model loading failed
 
 preprocess = transforms.Compose([
     transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
@@ -121,8 +128,18 @@ preprocess = transforms.Compose([
     transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 ])
 
+# --- NEW: Health Check/Root Route ---
+@app.route('/', methods=['GET'])
+def health_check():
+    """Basic health check route for Render."""
+    status = "Backend is running and ready." if model else "Backend is running, but model not loaded."
+    return jsonify({"status": status, "model_loaded": model is not None}), 200
+
 @app.route('/colorize', methods=['POST'])
 def colorize_image():
+    if model is None:
+        return jsonify({"error": "Colorization model is not loaded. Service unavailable."}), 503
+
     if 'image' not in request.files:
         return jsonify({'error': 'No image file provided'}), 400
 
@@ -134,7 +151,6 @@ def colorize_image():
         try:
             img_bytes = file.read()
             img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
-
 
             original_width, original_height = img.size
             print(f"Original image dimensions: {original_width}x{original_height}")
@@ -152,7 +168,6 @@ def colorize_image():
             output_tensor = (output_tensor * 0.5) + 0.5
             output_tensor = output_tensor.squeeze(0).cpu()
             output_image = transforms.ToPILImage()(output_tensor)
-
 
             output_image = output_image.resize((original_width, original_height), Image.LANCZOS)
             print(f"Resized output to original dimensions: {output_image.size[0]}x{output_image.size[1]}")
