@@ -12,7 +12,7 @@ Experience the Colorization Transformer in action! You can access the frontend a
 
 While the backend for this project has been deployed, you might encounter issues with its functionality, specifically related to the image colorization process.
 
-**Disclaimer:** The current backend deployment faces **out-of-memory (OOM) issues** when attempting to run the trained Colorization Transformer model. This model, being a hybrid CNN-Transformer architecture, is computationally intensive and requires significant memory resources, especially during inference with larger images. The current hosting environment's memory allocation is insufficient to handle the model's demands, leading to crashes.
+**Disclaimer:** The current backend deployment faces **out-of-memory (OOM) issues** when attempting to run the trained Colorization Transformer model, hence suspended the backend. This model, being a hybrid CNN-Transformer architecture, is computationally intensive and requires significant memory resources, especially during inference with larger images. The current hosting environment's memory allocation is insufficient to handle the model's demands, leading to crashes.
 
 We are actively exploring solutions for more robust deployment environments or optimizations to the model for reduced memory footprint to ensure stable backend operation in the future.
 
