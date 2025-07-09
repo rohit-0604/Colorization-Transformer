@@ -53,7 +53,7 @@ const App = () => {
 
         try {
             // Make a POST request to the backend colorization endpoint
-            const response = await fetch(`${BACKEND_URL}`, {
+            const response = await fetch(`${BACKEND_URL}/colorize`, {
                 method: 'POST',
                 body: formData,
             });
