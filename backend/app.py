@@ -8,12 +8,16 @@ from torchvision import transforms
 from PIL import Image, ImageEnhance
 import numpy as np
 
+from dotenv import load_dotenv
+load_dotenv()
+
+import os
+
 # Flask for web server
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-# --- Your model architecture classes (ResidualBlock, CNNEncoder, etc.) go here ---
-# (No changes needed to these classes based on the current problem)
+
 class ResidualBlock(nn.Module):
     def __init__(self, channels):
         super().__init__()
@@ -92,11 +96,9 @@ class ColorizationModel(nn.Module):
 
 
 app = Flask(__name__)
-# Enable CORS for all origins. In a production environment, you might want to restrict this
-# to your Netlify frontend's domain (e.g., CORS(app, origins=["https://colorizegreyscaleimages.netlify.app"]))
 CORS(app)
 
-IMAGE_SIZE = 128
+IMAGE_SIZE = int(os.environ.get('IMAGE_SIZE_ENV', 128))
 APPLY_SHARPNESS_ENHANCEMENT = True
 SHARPNESS_FACTOR = 1.5
 MODEL_PATH = 'best_colorization_model.pth'
@@ -114,10 +116,7 @@ try:
     print(f"Model loaded successfully from {MODEL_PATH} on {device}!")
 except FileNotFoundError:
     print(f"Error: Model file not found at {MODEL_PATH}. Please ensure the model is in the same directory as this script.")
-    # Consider exiting here or setting a flag that the model is not available
-    # For deployment, it's better to explicitly handle this failure
     model = None # Indicate model loading failed
-    # Instead of exit(), you might want to return an error status on /colorize
 except Exception as e:
     print(f"Error loading model: {e}")
     model = None # Indicate model loading failed
