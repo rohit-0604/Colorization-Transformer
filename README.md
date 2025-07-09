@@ -1,4 +1,4 @@
-Colorization Transformer - Colorize Greyscale Images
+# Colorization Transformer - Colorize Greyscale Images
 This project implements a hybrid CNN-Transformer model for the task of colorizing greyscale images. The goal is to take a black and white image and predict its original colors, bringing it to life.
 
 Live Demo (Frontend)
