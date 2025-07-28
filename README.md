@@ -16,6 +16,13 @@ While the backend for this project has been deployed, you might encounter issues
 
 We are actively exploring solutions for more robust deployment environments or optimizations to the model for reduced memory footprint to ensure stable backend operation in the future.
 
+## RESULTS
+<img width="1263" height="899" alt="Screenshot 2025-06-05 113926" src="https://github.com/user-attachments/assets/38d5dd8f-52cf-4c04-90b9-4a3c9bad6386" />
+<img width="1266" height="911" alt="Screenshot 2025-06-05 114849" src="https://github.com/user-attachments/assets/ea4a16f8-87d1-4143-8cfd-c008aacb52d7" />
+<img width="1282" height="913" alt="Screenshot 2025-06-05 114915" src="https://github.com/user-attachments/assets/f3fc8b4f-b519-461c-8fb7-b7289578b607" />
+<img width="1300" height="909" alt="Screenshot 2025-06-05 114946" src="https://github.com/user-attachments/assets/51ee3da0-6afe-40b2-97a7-ae2c21dad0f1" />
+
+
 ## Model & Training Details
 
 The core of this project is a sophisticated **hybrid CNN-Transformer model** designed for high-quality image colorization.
